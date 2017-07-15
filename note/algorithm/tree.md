@@ -1,10 +1,10 @@
-### 简介
+## 简介
 树相关的算法题以及自己的理解
 
-### 二叉树中和为某一值的路径（剑指Offer）
-#### 分析
-剑指Offer上的路径指的是从根节点到叶子节点的路径，这一点比较重要。关键做法是从根节点开始，分别累加左右子树的值，如果左右子树为叶子节点的话，且累加值符合条件的话，把路径加进去，否则的话弹出这个节点的值。
-#### 关键代码
+## 二叉树中和为某一值的路径（剑指Offer）
+### 分析
+剑指Offer上的路径指的是从根节点到叶子节点的路径，这一点比较重要。关键做法是**从根节点开始，分别累加左右子树的值，如果左右子树为叶子节点的话，且累加值符合条件的话，把路径加进去，否则的话弹出这个节点的值**。
+### 关键代码
 ```
 private vector<vector<int> > result;
 vector<vector<int> > find_path(TreeNode * root, int expect_num, int current_num, vector<int> &path) {
@@ -30,14 +30,16 @@ vector<vector<int> > find_path(TreeNode * root, int expect_num, int current_num,
   current_num -= root->val;
 }
 ```
-#### 时间复杂度
+### 时间复杂度
 最好情况是O(n)，最坏情况是O(nlogn)
 
-### 二叉搜索树转有序双向链表（剑指Offer）
+## 二叉搜索树转有序双向链表（剑指Offer）
 将一颗二叉搜索树转成一个双向链表，左子数指向双向链表的前驱，右子数指向双向链表的后继。
-#### 分析
-因为一颗二叉搜索树中序遍历是有序的，所以最简单的做法是将二叉搜索树中序遍历后的节点放进一个vector中，然后遍历vector构造双向链表（在牛客网上会超出运行内存）。非递归的做法是中序遍历二叉搜索树，记录前一个遍历节点的值和首节点的值，每次遍历的时候构造left和right指针。
-#### 关键代码分析
+### 分析
+因为一颗二叉搜索树中序遍历是有序的，所以
+- 最简单的做法是将二叉搜索树中序遍历后的节点放进一个vector中，然后遍历vector构造双向链表（在牛客网上会超出运行内存）
+- 非递归的做法是中序遍历二叉搜索树，记录前一个遍历节点的值和首节点的值，每次遍历的时候构造left和right指针。
+### 关键代码分析
 ```
 /* 非递归版本 */
 TreeNode* Convert(TreeNode* pRootOfTree) {
@@ -101,47 +103,4 @@ TreeNode* Convert(TreeNode* pRootOfTree) {
             /* 返回最小的节点 */
             return left == NULL ? pRootOfTree:left;
         }
-```
-
-### 字符串的全排列（剑指Offer）
-给定一个字符串，求字符串的所有排列组合。
-#### 分析
-n个字符串的全排列可以看作：第一个元素与其余n-1个元素的全排列组合。
-#### 关键代码分析
-```
-vector<string> Permutation(string str) {
-            vector<string> result;
-            unordered_set<string> uni_str;
-
-            int len = str.size();
-            if (len < 1) {
-                return result;
-            }
-
-            permutation(str, 0, len, result, uni_str);
-            return result;
-        }
-
-        void permutation(string str, int begin, int end, vector<string> &result, unordered_set<string> &uni_str) {
-                    if (begin == end-1) {
-                        /* 保证每次的输出，都是唯一的 */
-                        if (uni_str.find(str) == uni_str.end()) {
-                            uni_str.insert(str);
-                            result.push_back(str);
-                        }
-                    } else {
-                        sort(str.begin()+begin, str.end());
-                        for (int i = begin; i < end; i++) {
-                            char c = str[begin];
-                            str[begin] = str[i];
-                            str[i] = c;
-
-                            permutation(str, begin+1, end, result);
-
-                            char ch = str[begin];
-                            str[begin] = str[i];
-                            str[i] = ch;
-                        }
-                    }
-                }
 ```
