@@ -43,64 +43,64 @@ vector<vector<int> > find_path(TreeNode * root, int expect_num, int current_num,
 ```
 /* 非递归版本 */
 TreeNode* Convert(TreeNode* pRootOfTree) {
-            if (pRootOfTree == NULL) {
-                return NULL;
-            }
+  if (pRootOfTree == NULL) {
+    return NULL;
+  }
 
-            stack<TreeNode *> S;
-            TreeNode * p = pRootOfTree;
-            TreeNode * pre = pRootOfTree;
-            TreeNode * first = NULL;
+  stack<TreeNode *> S;
+  TreeNode * p = pRootOfTree;
+  TreeNode * pre = pRootOfTree;
+  TreeNode * first = NULL;
 
-            while (p || !S.empty()) {
-                while (p) {
-                    S.push(p);
-                    p = p->left;
-                }
+  while (p || !S.empty()) {
+    while (p) {
+      S.push(p);
+      p = p->left;
+    }
 
-                S.pop();
-                p = S.top();
-                if (first == NULL) {
-                    first = p;
-                } else {
-                    pre->right = p;
-                    p->left = pre;
-                }
-                pre = p;
-                p = p->right;
-            }
+    S.pop();
+    p = S.top();
+    if (first == NULL) {
+      first = p;
+    } else {
+      pre->right = p;
+      p->left = pre;
+    }
+    pre = p;
+    p = p->right;
+  }
 
-            return first;
-        }
+  return first;
+}
 
 
 /* 递归解法 */
 TreeNode* Convert(TreeNode* pRootOfTree) {
-            if (pRootOfTree == NULL) {
-                return NULL;
-            }
+  if (pRootOfTree == NULL) {
+    return NULL;
+  }
 
-            if (pRootOfTree->left == NULL && pRootOfTree->right == NULL) {
-                return pRootOfTree;
-            }
-            /* 转换左子树，返回的是最左节点，需要找到最大的节点 */
-            TreeNode *left = Convert(pRootOfTree->left);
-            TreeNode *p = left;
-            while (left && p->right) {
-                p = p->right;
-            }
+  if (pRootOfTree->left == NULL && pRootOfTree->right == NULL) {
+    return pRootOfTree;
+  }
+  /* 转换左子树，返回的是最左节点，需要找到最大的节点 */
+  TreeNode *left = Convert(pRootOfTree->left);
+  TreeNode *p = left;
+  while (left && p->right) {
+    p = p->right;
+  }
 
-            if (left != NULL) {
-                p->right = pRootOfTree;
-                pRootOfTree->left = p;
-            }
-            /* 转换右子树找到最小节点 */
-            TreeNode *right = Convert(pRootOfTree->right);
-            if (right != NULL) {
-                pRootOfTree->right = right;
-                right->left = pRootOfTree;
-            }
-            /* 返回最小的节点 */
-            return left == NULL ? pRootOfTree:left;
-        }
-```
+  if (left != NULL) {
+    p->right = pRootOfTree;
+    pRootOfTree->left = p;
+  }
+  /* 转换右子树找到最小节点 */
+  TreeNode *right = Convert(pRootOfTree->right);
+  if (right != NULL) {
+    pRootOfTree->right = right;
+    right->left = pRootOfTree;
+  }
+  /* 返回最小的节点 */
+  return left == NULL ? pRootOfTree:left;
+}
+  ```
