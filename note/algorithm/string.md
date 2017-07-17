@@ -1,6 +1,6 @@
 ## 简介
 字符串相关的算法题和自己的理解
-## 字符串的全排列（剑指Offer）
+## 1、字符串的全排列（剑指Offer）
 给定一个字符串，求字符串的所有排列组合。
 ### 分析
 n个字符串的全排列可以看作：第一个元素与其余n-1个元素的全排列组合。
@@ -84,4 +84,46 @@ vector<vector<int> > permutation(vector<int> &array[]) {
     }
     return result;
 }
+```
+***
+## 2、数组中的数字排成最小的一个数
+给定一个整型数组A[]，求组合成一个最小的数的一个排列
+### 分析
+数组由A0~An组成，排成最小数的排列一定是当前数和剩下的所有数排成最小的排列，那么就可以分别求A0、A1的排列后的[A1A0]排列，然后求[A1A0]排列组成的数字与剩下的A1+之后的数字组成的最小排列。考虑到大数问题，两种不同排列数字的大小可以通过字符串的比较来完成。
+### 关键代码
+```
+class Solution {
+public:
+  static bool compare_str(string a, string b) {
+      string c = a + b;
+      string d = b + a;
+      return c < d;
+    }
+
+  string PrintMinNumber(vector<int> numbers) {
+    string result;
+    int size = numbers.size();
+
+    if (size < 1) {
+      return result;
+    }
+
+    vector<string> str_num;
+    for (int i = 0; i < size; i++) {
+      stringstream ss;
+      ss << numbers[i];
+      /* 数字转换成字符串 */
+      string s = ss.str();
+      str_num.push_back(s);
+    }
+
+    sort(str_num.begin(), str_num.end(), compare_str);
+
+    for (int i = 0; i < size; i++) {
+      result += str_num[i];
+    }
+
+    return result;
+  }
+};
 ```
