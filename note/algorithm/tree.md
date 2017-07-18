@@ -297,3 +297,87 @@ private:
     }
 };
 ```
+***
+## 7、求二叉树的深度
+给定一颗二叉树就其深度
+### 分析
+二叉树的深度是根节点到叶子节点最长的一条路径，本题有两种解法：
+- 一种是层次遍历时，没遍历一层即树的深度加1
+- 递归遍历左右子树，左右子树的深度的较大者加1，即为二叉树的深度
+### 关键代码分析
+```
+class Solution {
+public:
+    int TreeDepth(TreeNode* pRoot)
+    {
+        if (pRoot == NULL) {
+            return 0;
+        }
+
+        return 1 + max(TreeDepth(pRoot->left), TreeDepth(pRoot->right));
+    }
+};
+```
+***
+## 8、判断一棵树是否是平衡二叉树
+平衡二叉树的特点是左右子树的高度之差不超过2
+### 分析
+这道题简单的做法是分别求出该节点的左右子树的高度，判断高度之差是否大于1，这种做法会导致某些节点被遍历多次，时间复杂度为O(n^2)。另外一种比较好的做法是先分别求出左右子树的高度，然后在此基础上求父节点的高度，在求的过程中来判断是否满足平衡二叉树，时间复杂度为O(n)。
+### 关键代码
+```
+class Solution {
+public:
+    /* 通过求左右子树的高度来判断是否是平衡二叉树 */
+    int DepthTree(TreeNode* pRoot) {
+        if (pRoot == NULL) {
+            return 0;
+        }
+
+        return 1 + max(DepthTree(pRoot->left), DepthTree(pRoot->right));
+    }
+    bool IsBalanced_Solution(TreeNode* pRoot) {
+        if (pRoot == NULL) {
+            return true;
+        }
+
+        if (!IsBalanced_Solution(pRoot->left) || !IsBalanced_Solution(pRoot->right)) {
+            return false;
+        }
+
+        int left = DepthTree(pRoot->left);
+        int right = DepthTree(pRoot->right);
+        int diff = left - right;
+
+        if (diff > 1 || diff < -1) {
+            return false;
+        }
+        
+        return true; 
+    }
+
+    /* 通过后序遍历判断树是否为平衡二叉树，每次遍历的时候记录下该节点的深度 */
+    bool IsBalanced_Solution(TreeNode* pRoot) {
+        int depth = 0;
+        return balance_tree(pRoot, depth);
+    }
+
+    bool balance_tree(TreeNode * pRoot, int &depth) {
+        if (pRoot == NULL) {
+            depth = 0;
+            return true;
+        }
+
+        int left, right;
+        if (balance_tree(pRoot->left, left) && balance_tree(pRoot->right, right)) {
+            int diff = left - right;
+            if (diff > 1 || diff < -1) {
+                return false;
+            }
+            depth = 1 + max(left, right);
+            return true;
+        }
+
+        return false;
+    }
+};
+```
