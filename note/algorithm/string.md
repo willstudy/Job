@@ -127,3 +127,83 @@ public:
   }
 };
 ```
+***
+## 3、翻转单词的顺序
+有一段英文语句，翻转每个单词的顺序，比如 I am a student. 翻转成 student. am I
+### 分析
+先把单词整体翻转一下，然后再翻转每个单词，就可以达到效果了
+### 关键代码
+```
+class Solution {
+public:
+    void reverse_str(string &str, int left, int right) {
+        int size = str.size();
+
+        while (left < right) {
+            char ch = str[left];
+            str[left] = str[right];
+            str[right] = ch;
+
+            left++;
+            right--;
+        }
+    }
+    string ReverseSentence(string str) {
+        int size = str.size();
+
+        if (size < 2) {
+            return str;
+        } 
+
+        string result(str);
+        reverse_str(result, 0, size - 1);
+
+        int left = 0;
+        int right = 1;
+
+        while (left < size && right < size) {
+            while (result[left] == ' ' && left < size) {
+                left++;
+            }
+            right = left+1;
+            while (result[right] != ' ' && right < size) {
+                right++;
+            }
+            reverse_str(result, left, right-1);
+            left = right+1;
+        }
+
+        return result;
+    }
+};
+```
+***
+## 4、字符串的左旋操作
+给定一个字符串和整数n，求把源字符串前n位字符串旋转到末尾的字符串，比如n=2，str=abcdefg，结果就是cdefgab
+### 分析
+首先把字符串从第n位分别旋转两边字符串变成bagfedc，然后再旋转该字符串，总共三次旋转操作
+### 关键代码
+```
+class Solution {
+public:
+    string LeftRotateString(string str, int n) {
+        int len = str.size();
+        if(len <= 1)
+            return str;
+        n = n % len;
+        if(n==0)
+            return str;
+        reverseStr(str, 0, n-1);
+        reverseStr(str, n, len-1);
+        reverseStr(str, 0, len-1);
+        return str;
+    }
+    void reverseStr(string &str, int left, int right)
+    {
+        for(int i=left, r=right ;i<=left+(right-left)/2; ++i){
+            swap(str[i],str[r--]);
+        }
+    }
+};
+```
+

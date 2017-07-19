@@ -381,3 +381,62 @@ public:
     }
 };
 ```
+***
+## 9、求二叉树两个节点的最低公共祖先
+### 分析
+1、这一题需要先判断是否是二叉搜索树，如果是二叉搜索树：
+- 从根节点遍历，如果两个节点的值都大于跟节点，那么公共祖先在右子树
+- 如果都小于根节点的话，那么公共祖先在左子树
+- 反之根节点就是最低的公共祖先
+详情解法一
+
+2、如果不是二叉搜索树，且有指向父节点的指针，那么求最低的公共祖先，可以转换成求两个链表的公共节点（通过压栈弹栈的方式）
+
+3、如果是普通的二叉树，首先遍历的时候分别保存根节点到两个节点的路径，然后转换成求两个链表公共节点的问题
+
+这里只给出情况3的解法
+### 关键代码
+```
+/* 保存根节点到两个节点的路径 */
+bool GetNodePath(TreeNode* pHead, TreeNode* pNode, std::list<TreeNode*>& path)
+{
+    if(pHead == pNode)
+        return true;
+ 
+    path.push_back(pHead);
+ 
+    bool found = false;
+    if(pHead->m_pLeft != NULL)
+        found = GetNodePath(pHead->m_pLeft, pNode, path);
+    if(!found && pHead->m_pRight)
+        found = GetNodePath(pHead->m_pRight, pNode, path);
+	/* 没找到的话，就弹出来 */
+    if(!found)
+        path.pop_back();
+ 
+    return found;
+}
+/* 求两个路径的公共节点 */
+TreeNode* LastCommonNode
+(
+    const std::list<TreeNode*>& path1,
+    const std::list<TreeNode*>& path2
+)
+{
+    std::list<TreeNode*>::const_iterator iterator1 = path1.begin();
+    std::list<TreeNode*>::const_iterator iterator2 = path2.begin();
+   
+    TreeNode* pLast = NULL;
+ 
+    while(iterator1 != path1.end() && iterator2 != path2.end())
+    {
+        if(*iterator1 == *iterator2)
+            pLast = *iterator1;
+ 
+        iterator1++;
+        iterator2++;
+    }
+ 
+    return pLast;
+}
+```
