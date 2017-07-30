@@ -206,4 +206,45 @@ public:
     }
 };
 ```
+***
+## 4、字符串的组合
+给定一个字符串，求该字符串所有字符的组合
+### 分析
+在长度为 n 的字符串中取 m 个元素，有两种方法，一种是从 n 个字符串中取出这个元素加入到备选队列中，一种是取出但是不加入备选队列中。第一种方法的方法结果是(n-1, m-1)，另一种方法的结果是(n-1, m)，因此可以写出递归代码如下：
+### 关键代码
+```
+class Solution {
+public:
+    /* 求字符串的所有组合 */
+    vector<string> Combination(string str) {
+        int size = str.size();
+        if (size < 2) {
+            return str;
+        }
+
+        vector<string> result;
+        for (int i = 1; i <= size; i++) {
+            /* 从str中取i个元素的组合 */
+            combination_str(str, i, result);
+        }
+        return result; 
+    }
+
+    void combination_str(string str, int num, vector<string> &result) {
+        if (num == 0 || str.size() < 1) {
+            return;
+        }
+
+        result.push_back(str);
+        string str1(str);
+        /* 加入到当前组合 */
+        combination_str(str1, num-1, result);
+
+        result.pop_back();
+        string str2(str.begin()+1, str.end());
+        /* 不加入到当前组合 */
+        combination_str(str2, num, result);
+    }
+};
+```
 

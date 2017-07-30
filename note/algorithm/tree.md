@@ -440,3 +440,65 @@ TreeNode* LastCommonNode
     return pLast;
 }
 ```
+***
+## 10、判断一颗树是否是左右对称的
+一棵树对称的判断是，它的左孩子等于右孩子的（值也相同）
+### 分析
+这一题有两种做法，递归的做法是将树分成左右子树看待，完全的比较左右子树。非递归的做法是通过两个队列的形式，判断每一层次的遍历队列的首尾元素是否相同。
+### 关键代码
+```
+/* 递归版本 */
+class Solution {
+public:
+    bool isSymmetric(TreeNode* root) {
+        return symmetric(root, root);
+    }
+
+private:
+    bool symmetric(TreeNode* left, TreeNode* right) {
+        if (left == NULL && right == NULL) {
+            return true;
+        } else if (left && right && left->val == right->val) {
+           return symmetric(left->left, right->right) &&
+              symmetric(left->right, right->left); 
+        } else {
+            return false;
+        }
+    }
+};
+
+/* 非递归版本 */
+class Solution {
+public:
+    bool isSymmetric(TreeNode* root) {
+        if (root == NULL) {
+            return true;
+        }
+
+        queue<TreeNode*> Q;
+
+        Q.push(root->left);
+        Q.push(root->right);
+
+        while (!Q.empty()) {
+            TreeNode *node1 = Q.front();
+            Q.pop();
+            TreeNode *node2 = Q.front();
+            Q.pop();
+
+            if (node1 == NULL && node2 == NULL) continue;
+            if (node1 == NULL || node2 == NULL) return false;
+            if (node1 && node2 && node1->val != node2->val) {
+                return false;
+            }
+
+            Q.push(node1->left);
+            Q.push(node2->right);
+            Q.push(node1->right);
+            Q.push(node2->left);
+        }
+
+        return true;
+    }
+};
+```
